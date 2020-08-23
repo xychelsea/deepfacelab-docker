@@ -81,59 +81,7 @@ docker run --gpus all --rm -it -d
 
 ## Using DeepFakeLab
 
-First convert MIDI or other files to a TensorFlow record file for processing.
-
-```bash
-#!/bin/bash
-
-TRAINING_INPUT=$MAGENTA_WORKSPACE/[examples]
-TRAINING_FILE=$MAGENTA_WORKSPACE/[examples].tfrecord
-
-convert_dir_to_note_sequences \
-  --input_dir=$TRAINING_INPUT \
-  --output_file=$TRAINING_FILE \
-  --recursive
-```
-
-Next, run the training model using one of pre-trained models or your own model.
-
-```bash
-#!/bin/bash
-
-# Pre-trained CONFIG options: basic_rnn, mono_rnn, lookback_rnn, attention_rnn
-
-CONFIG=lookback_rnn
-TRAINING_STEPS=20480
-TRAINING_FILE=$MAGENTA_WORKSPACE/tfrecord/example.tfrecord
-TRAINING_DIR=$MAGENTA_WORKSPACE/tensorboard
-
-melody_rnn_train \
-    --config=$CONFIG \
-    --hparams="batch_size=64,rnn_layer_sizes=[64,64]" \
-    --num_training_steps=$TRAINING_STEPS \
-    --sequence_example_file=$TRAINING_FILE \
-    --run_dir=$TRAINING_DIR
-```
-
-Finally, generate MIDI files into the ```workspace``` or other output directory using one of the three configurations and a primer file.
-
-```bash
-#!/bin/bash
-
-# CONFIG options: basic_rnn, mono_rnn, lookback_rnn, attention_rnn
-
-CONFIG=lookback_rnn
-BUNDLE_PATH=$MAGENTA_MODELS/$CONFIG.mag
-PRIMER_FILE=$MAGENTA_WORKSPACE/example.mid
-
-melody_rnn_generate \
-    --config=$CONFIG \
-    --bundle_file=$BUNDLE_PATH \
-    --output_dir=$HOME/magenta/workspace/output \
-    --num_outputs=16 \
-    --num_steps=512 \
-    --primer_file="$PRIMER_FILE"
-```
+[TK]
 
 ## Building the containers
 
