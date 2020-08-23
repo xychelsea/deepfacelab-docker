@@ -14,7 +14,7 @@ Two flavors provide an [NVIDIA GPU-enabled](https://hub.docker.com/r/nvidia/cuda
 
 ## Getting the containers
 
-### Vanilla DeepFakeLabe
+### Vanilla DeepFakeLab
 
 The base container, based on the ```xychelsea/tensorflow:latest``` from the [Anaconda 3 container stack](https://hub.docker.com/r/xychelsea/anaconda3) (```xychelsea/anaconda3:latest```) running Tini shell. For the container with a ```/usr/bin/tini``` entry point, use:
 
