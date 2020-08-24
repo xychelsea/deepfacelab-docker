@@ -55,7 +55,6 @@ RUN conda create -n deepfacelab -c main \
     && conda install -c conda-forge -n deepfacelab \
         colorama \
         h5py \
-        git \
         ffmpeg \
         ffmpeg-python \
         labelme \
@@ -68,22 +67,20 @@ RUN conda create -n deepfacelab -c main \
     && rm -rvf ${ANACONDA_PATH}/share/jupyter/lab/staging
 
 RUN git clone git://github.com/iperov/DeepFaceLab.git ${DEEPFACELAB_PATH} \
-    && mkdir -p ${DEEPFACELAB_WORKSPACE} ${DEEPFACELAB_SCRIPTS} \
-    && rm -rvf ${ANACONDA_PATH}/share/jupyter/lab/staging
+    && git clone git://github.com/nagadit/DeepFaceLab_Linux.git ${DEEPFACELAB_PATH}/linux \
+    && mkdir -p ${DEEPFACELAB_WORKSPACE} \
+    && cp -rvf ${DEEPFACELAB_PATH}/linux/scripts ${DEEPFACELAB_SCRIPTS} \
+    && rm -rvf ${ANACONDA_PATH}/share/jupyter/lab/staging ${DEEPFACELAB_PATH}/linux
 
 # Switch back to root
 USER root
 
 RUN fix-permissions ${DEEPFACELAB_WORKSPACE} \
+    && chmod +x ${DEEPFACELAB_SCRIPTS}/*.sh \
     && fix-permissions ${DEEPFACELAB_SCRIPTS} \
     && ln -s ${DEEPFACELAB_PATH} ${HOME}/deepfacelab \
     && ln -s ${DEEPFACELAB_WORKSPACE} ${HOME}/workspace \
     && ln -s ${DEEPFACELAB_SCRIPTS} ${HOME}/scripts
-
-# Install scripts
-COPY ./scripts ${DEEPFACELAB_SCRIPTS}
-
-RUN chmod +x ${DEEPFACELAB_SCRIPTS}/*.sh
 
 # Clean Anaconda
 RUN conda clean -afy
