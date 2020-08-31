@@ -14,12 +14,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-FROM xychelsea/tensorflow:latest-jupyter
-LABEL description="DeepFaceLab Vanilla Container w/ Jupyter Notebooks"
+FROM xychelsea/tensorflow:latest-gpu-jupyter
+LABEL description="DeepFaceLab GPU Container w/ Jupyter Notebooks"
 
-# $ docker build -t xychelsea/deepfacelab:latest-jupyter -f Dockerfile.jupyter .
-# $ docker run --rm -it -d -p 8888:8888 xychelsea/deepfacelab:latest-jupyter
-# $ docker push xychelsea/deepfacelab:latest-jupyter
+# $ docker build -t xychelsea/deepfacelab:latest-gpu-jupyter -f Dockerfile.nvidia-jupyter .
+# $ docker run --rm -it -d -p 8888:8888 xychelsea/deepfacelab:latest-gpu-jupyter
+# $ docker push xychelsea/deepfacelab:latest-gpu-jupyter
 
 ENV ANACONDA_ENV=deepfacelab
 ENV DEEPFACELAB_PATH=/usr/local/deepfacelab
@@ -52,7 +52,7 @@ WORKDIR ${HOME}
 RUN conda update -c defaults conda
 
 # Install DeepFaceLab
-RUN conda create -n deepfacelab -c main python=3.6.8 \
+RUN conda create -n deepfacelab -c main python=3.6.8 cudnn=7.6.5 cudatoolkit=10.0.130 \
     && conda install -c conda-forge -n deepfacelab \
         colorama \
         h5py==2.9.0 \
@@ -67,7 +67,7 @@ RUN conda create -n deepfacelab -c main python=3.6.8 \
         labelme==4.2.9 \
         ffmpeg-python==0.1.17 \
         opencv-python==4.1.0.25 \
-        tensorflow==1.13.2 \
+        tensorflow-gpu==1.13.2 \
     && git clone git://github.com/iperov/DeepFaceLab.git ${DEEPFACELAB_PATH} \
     && git clone git://github.com/nagadit/DeepFaceLab_Linux.git ${DEEPFACELAB_PATH}/linux \
     && mkdir -p ${DEEPFACELAB_WORKSPACE} \
