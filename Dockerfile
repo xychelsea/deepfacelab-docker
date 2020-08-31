@@ -37,7 +37,8 @@ RUN apt-get update --fix-missing \
 
 # Install dependencies
 RUN apt-get -y install \
-    git
+    git \
+    libglu1-mesa-dev
 
 # Create DeepFaceLab directory
 RUN mkdir -p ${DEEPFACELAB_PATH} \
@@ -51,22 +52,23 @@ WORKDIR ${HOME}
 RUN conda update -c defaults conda
 
 # Install DeepFaceLab
-RUN conda create -n deepfacelab -c main \
+RUN conda create -n deepfacelab -c main python=3.6.8 \
     && conda install -c conda-forge -n deepfacelab \
         colorama \
-        h5py \
+        h5py==2.9.0 \
         ffmpeg \
-        ffmpeg-python \
-        labelme \
-        numpy \
-        py-opencv \
+        numpy==1.17.0 \
         pyqt \
-        scikit-image \
-        scipy \
+        scikit-image==0.14.2 \
+        scipy==1.4.1 \
         tqdm \
-    && rm -rvf ${ANACONDA_PATH}/share/jupyter/lab/staging
-
-RUN git clone git://github.com/iperov/DeepFaceLab.git ${DEEPFACELAB_PATH} \
+    && PATH=${ANACONDA_PATH}/envs/${ANACONDA_ENV}/bin/:$PATH \
+    && pip3 install \
+        labelme==4.2.9 \
+        ffmpeg-python==0.1.17 \
+        opencv-python==4.1.0.25 \
+        tensorflow==1.13.2 \
+    && git clone git://github.com/iperov/DeepFaceLab.git ${DEEPFACELAB_PATH} \
     && git clone git://github.com/nagadit/DeepFaceLab_Linux.git ${DEEPFACELAB_PATH}/linux \
     && mkdir -p ${DEEPFACELAB_WORKSPACE} \
     && cp -rvf ${DEEPFACELAB_PATH}/linux/scripts ${DEEPFACELAB_SCRIPTS} \
@@ -74,6 +76,8 @@ RUN git clone git://github.com/iperov/DeepFaceLab.git ${DEEPFACELAB_PATH} \
 
 # Switch back to root
 USER root
+
+COPY ./env.sh ${DEEPFACELAB_SCRIPTS}/env.sh
 
 RUN fix-permissions ${DEEPFACELAB_WORKSPACE} \
     && chmod +x ${DEEPFACELAB_SCRIPTS}/*.sh \
