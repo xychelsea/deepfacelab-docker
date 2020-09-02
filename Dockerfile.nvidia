@@ -14,12 +14,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-FROM xychelsea/tensorflow:latest-gpu-jupyter
-LABEL description="DeepFaceLab GPU Container w/ Jupyter Notebooks"
+FROM xychelsea/tensorflow:latest-nvidia
+LABEL description="DeepFaceLab GPU Container"
 
-# $ docker build -t xychelsea/deepfacelab:latest-gpu-jupyter -f Dockerfile.nvidia-jupyter .
-# $ docker run --rm -it -d -p 8888:8888 xychelsea/deepfacelab:latest-gpu-jupyter
-# $ docker push xychelsea/deepfacelab:latest-gpu-jupyter
+# $ docker build -t xychelsea/deepfacelab:latest-gpu -f Dockerfile.nvidia .
+# $ docker run --gpus all --rm -it xychelsea/deepfacelab:latest-gpu /bin/bash
+# $ docker push xychelsea/deepfacelab:latest-gpu
 
 ENV ANACONDA_ENV=deepfacelab
 ENV DEEPFACELAB_PATH=/usr/local/deepfacelab
