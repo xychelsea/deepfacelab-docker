@@ -76,8 +76,6 @@ RUN conda create -n deepfacelab -c main python=3.6.8 \
 # Switch back to root
 USER root
 
-COPY ./env.sh ${DEEPFACELAB_SCRIPTS}/env.sh
-
 RUN fix-permissions ${DEEPFACELAB_WORKSPACE} \
     && chmod +x ${DEEPFACELAB_SCRIPTS}/*.sh \
     && fix-permissions ${DEEPFACELAB_SCRIPTS} \
