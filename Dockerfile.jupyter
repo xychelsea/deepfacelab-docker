@@ -1,4 +1,4 @@
-# Magenta Dockerfile for Anaconda with TensorFlow stack
+# DeepFaceLab Dockerfile for Anaconda with TensorFlow stack
 # Copyright (C) 2020  Chelsea E. Manning
 #
 # This program is free software: you can redistribute it and/or modify
