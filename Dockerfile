@@ -23,6 +23,7 @@ LABEL description="DeepFaceLab Vanilla Container"
 
 ENV ANACONDA_ENV=deepfacelab
 ENV DEEPFACELAB_PATH=/usr/local/deepfacelab
+ENV DEEPFACELAB_PYTHON=python3.6
 ENV DEEPFACELAB_HOME=${HOME}/deepfacelab
 ENV DEEPFACELAB_WORKSPACE=${DEEPFACELAB_PATH}/workspace
 ENV DEEPFACELAB_SCRIPTS=${DEEPFACELAB_PATH}/scripts
@@ -68,11 +69,9 @@ RUN conda create -n deepfacelab -c main python=3.6.8 \
         ffmpeg-python==0.1.17 \
         opencv-python==4.1.0.25 \
         tensorflow==1.13.2 \
-    && git clone git://github.com/iperov/DeepFaceLab.git ${DEEPFACELAB_PATH} \
-    && git clone git://github.com/nagadit/DeepFaceLab_Linux.git ${DEEPFACELAB_PATH}/linux \
+    && git clone git://github.com/xychelsea/deepfacelab.git ${DEEPFACELAB_PATH} \
     && mkdir -p ${DEEPFACELAB_WORKSPACE} \
-    && cp -rvf ${DEEPFACELAB_PATH}/linux/scripts ${DEEPFACELAB_SCRIPTS} \
-    && rm -rvf ${ANACONDA_PATH}/share/jupyter/lab/staging ${DEEPFACELAB_PATH}/linux
+    && rm -rvf ${ANACONDA_PATH}/share/jupyter/lab/staging
 
 # Switch back to root
 USER root
