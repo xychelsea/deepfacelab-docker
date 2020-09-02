@@ -38,7 +38,8 @@ RUN apt-get update --fix-missing \
 
 # Install dependencies
 RUN apt-get -y install \
-    git
+    git \
+    libglu1-mesa-dev
 
 # Create DeepFaceLab directory
 RUN mkdir -p ${DEEPFACELAB_PATH} \
