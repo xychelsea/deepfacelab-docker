@@ -53,7 +53,7 @@ WORKDIR ${HOME}
 RUN conda update -c defaults conda
 
 # Install DeepFaceLab
-RUN conda create -n deepfacelab -c main python=3.6.8 \
+RUN conda create -n deepfacelab -c main python=3.6.8 cudnn=7.6.5 cudatoolkit=10.0.130 \
     && conda install -c conda-forge -n deepfacelab \
         colorama \
         h5py==2.9.0 \
