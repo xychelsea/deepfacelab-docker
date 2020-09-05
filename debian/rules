@@ -60,7 +60,7 @@ CONFIG := --prefix=/usr \
 	--disable-stripping \
 	--enable-avresample --disable-filter=resample \
 	--enable-avisynth \
-	--enable-cuda-nvcc \
+	--enable-cuda \
 	--enable-cuvid \
 	--enable-gnutls \
 	--enable-ladspa \
