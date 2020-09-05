@@ -50,8 +50,6 @@ FLAVORS = standard extra static
 #   --enable-pocketsphinx           see #941377: package dependencies are slightly broken
 CONFIG := --prefix=/usr \
 	--extra-version="$(DEB_REVISION)" \
-	--extra-cflags=-I/usr/lib/cuda/include \
-	--extra-ldflags=-L/usr/lib/cuda/lib64 \
 	--toolchain=hardened \
 	--libdir=/usr/lib/$(DEB_HOST_MULTIARCH) \
 	--incdir=/usr/include/$(DEB_HOST_MULTIARCH) \
