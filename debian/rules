@@ -49,6 +49,8 @@ FLAVORS = standard extra static
 #   --enable-opencv                 Does not build with OpenCV >= 3.4
 #   --enable-pocketsphinx           see #941377: package dependencies are slightly broken
 CONFIG := --prefix=/usr \
+	--extra-cflags=-I/usr/local/cuda/include \
+	--extra-ldflags=-L/usr/local/cuda/lib64 \
 	--extra-version="$(DEB_REVISION)" \
 	--toolchain=hardened \
 	--libdir=/usr/lib/$(DEB_HOST_MULTIARCH) \
