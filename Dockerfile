@@ -1,5 +1,5 @@
 # DeepFaceLab Dockerfile for Anaconda with TensorFlow stack
-# Copyright (C) 2020  Chelsea E. Manning
+# Copyright (C) 2020, 2021  Chelsea E. Manning
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-FROM xychelsea/tensorflow:latest
+FROM xychelsea/tensorflow:v0.1.3
 LABEL description="DeepFaceLab Vanilla Container"
 
 # $ docker build -t xychelsea/deepfacelab:latest -f Dockerfile .
@@ -23,7 +23,7 @@ LABEL description="DeepFaceLab Vanilla Container"
 
 ENV ANACONDA_ENV=deepfacelab
 ENV DEEPFACELAB_PATH=/usr/local/deepfacelab
-ENV DEEPFACELAB_PYTHON=python3.6
+ENV DEEPFACELAB_PYTHON=python3.8
 ENV DEEPFACELAB_HOME=${HOME}/deepfacelab
 ENV DEEPFACELAB_WORKSPACE=${DEEPFACELAB_PATH}/workspace
 ENV DEEPFACELAB_SCRIPTS=${DEEPFACELAB_PATH}/scripts
@@ -53,22 +53,28 @@ WORKDIR ${HOME}
 RUN conda update -c defaults conda
 
 # Install DeepFaceLab
-RUN conda create -n deepfacelab -c main python=3.6.8 \
-    && conda install -c conda-forge -n deepfacelab \
-        colorama \
-        h5py==2.9.0 \
-        ffmpeg \
-        numpy==1.17.0 \
-        pyqt \
-        scikit-image==0.14.2 \
-        scipy==1.4.1 \
-        tqdm \
+RUN conda create -c conda-forge -n deepfacelab \
+        ca-certificates==2020.12.5 \
+        chardet==3.0.4 \
+        colorama==0.4.4 \
+        ffmpeg==4.3.1 \
+        ffmpeg-python==0.2.0 \
+        idna==2.10 \
+        numpy==1.19.5 \
+        pyqt==5.12.3 \
+        python==3.8.6 \
+        py-opencv==4.5.0 \
+        setuptools==49.6.0 \
+        scipy==1.6.0 \
+        six==1.15.0 \
+        tensorboard==2.4.1 \
+        tensorboard-plugin-wit==1.8.0 \
+        tqdm==4.56.0 \
+        werkzeug==1.0.1 \
+        wheel==0.36.2 \
     && PATH=${ANACONDA_PATH}/envs/${ANACONDA_ENV}/bin/:$PATH \
-    && pip3 install \
-        labelme==4.2.9 \
-        ffmpeg-python==0.1.17 \
-        opencv-python==4.1.0.25 \
-        tensorflow==1.13.2 \
+    && pip install \
+        tensorflow==2.4.0 \
     && git clone git://github.com/xychelsea/deepfacelab.git ${DEEPFACELAB_PATH} \
     && mkdir -p ${DEEPFACELAB_WORKSPACE} \
     && rm -rvf ${ANACONDA_PATH}/share/jupyter/lab/staging
@@ -77,9 +83,8 @@ RUN conda create -n deepfacelab -c main python=3.6.8 \
 USER root
 
 RUN fix-permissions ${DEEPFACELAB_WORKSPACE} \
-    && chmod +x ${DEEPFACELAB_SCRIPTS}/*.sh \
     && fix-permissions ${DEEPFACELAB_SCRIPTS} \
-    && ln -s ${DEEPFACELAB_PATH} ${HOME}/deepfacelab \
+    && chmod +x ${DEEPFACELAB_SCRIPTS}/*.sh \
     && ln -s ${DEEPFACELAB_WORKSPACE} ${HOME}/workspace \
     && ln -s ${DEEPFACELAB_SCRIPTS} ${HOME}/scripts
 
