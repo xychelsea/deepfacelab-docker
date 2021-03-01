@@ -73,7 +73,7 @@ RUN conda create -c conda-forge -n deepfacelab \
         wheel==0.36.2 \
     && PATH=$PATH:${ANACONDA_PATH}/envs/${ANACONDA_ENV}/bin/:/usr/local/ffmpeg-nvidia/bin \
     && pip install \
-        tensorflow==2.4.0 \
+        tensorflow-gpu==2.4.0 \
     && git clone git://github.com/xychelsea/deepfacelab.git ${DEEPFACELAB_PATH} \
     && mkdir -p ${DEEPFACELAB_WORKSPACE} \
     && rm -rvf ${ANACONDA_PATH}/share/jupyter/lab/staging

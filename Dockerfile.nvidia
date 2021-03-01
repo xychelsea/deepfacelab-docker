@@ -17,7 +17,7 @@
 FROM xychelsea/anaconda3:v0.2-gpu
 LABEL description="DeepFaceLab GPU Container"
 
-# $ docker build -t --network=host xychelsea/deepfacelab:latest-gpu -f Dockerfile.nvidia .
+# $ docker build --network=host -t xychelsea/deepfacelab:latest-gpu -f Dockerfile.nvidia .
 # $ docker run --gpus all --rm -it xychelsea/deepfacelab:latest-gpu /bin/bash
 # $ docker push xychelsea/deepfacelab:latest-gpu
 
@@ -73,7 +73,7 @@ RUN conda create -c conda-forge -n deepfacelab \
         wheel==0.36.2 \
     && PATH=$PATH:${ANACONDA_PATH}/envs/${ANACONDA_ENV}/bin/:/usr/local/ffmpeg-nvidia/bin \
     && pip install \
-        tensorflow==2.4.0 \
+        tensorflow-gpu==2.4.0 \
     && git clone git://github.com/xychelsea/deepfacelab.git ${DEEPFACELAB_PATH} \
     && mkdir -p ${DEEPFACELAB_WORKSPACE} \
     && rm -rvf ${ANACONDA_PATH}/share/jupyter/lab/staging
