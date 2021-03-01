@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-FROM xychelsea/anaconda3:v0.2
+FROM xychelsea/anaconda3:v0.2-jupyter
 LABEL description="DeepFaceLab Vanilla Container w/ Jupyter Notebooks"
 
 # $ docker build -t --network=host xychelsea/deepfacelab:latest-jupyter -f Dockerfile.jupyter .
