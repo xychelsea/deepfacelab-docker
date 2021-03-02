@@ -53,7 +53,9 @@ WORKDIR ${HOME}
 RUN conda update -c defaults conda
 
 # Install DeepFaceLab
-RUN conda create -c conda-forge -n deepfacelab \
+RUN conda create -c conda-forge -n deepfacelab python=3.8.6
+
+RUN conda install -c conda-forge -n deepfacelab \
         ca-certificates==2020.12.5 \
         chardet==3.0.4 \
         colorama==0.4.4 \
@@ -61,8 +63,8 @@ RUN conda create -c conda-forge -n deepfacelab \
         ffmpeg-python==0.2.0 \
         idna==2.10 \
         numpy==1.19.5 \
+        pillow==8.1.0 \
         pyqt==5.12.3 \
-        python==3.8.6 \
         py-opencv==4.5.0 \
         setuptools==49.6.0 \
         scipy==1.6.0 \
@@ -72,11 +74,11 @@ RUN conda create -c conda-forge -n deepfacelab \
         tqdm==4.56.0 \
         werkzeug==1.0.1 \
         wheel==0.36.2 \
-    && PATH=${ANACONDA_PATH}/envs/${ANACONDA_ENV}/bin/:$PATH \
-    && pip install \
-        ffmpeg-python \
-        tensorflow==2.4.0 \
-    && git clone git://github.com/xychelsea/deepfacelab.git ${DEEPFACELAB_PATH} \
+    && PATH=$PATH:${ANACONDA_PATH}/envs/${ANACONDA_ENV}/bin/
+
+RUN conda run -n deepfacelab pip3 install tensorflow==2.4.0
+
+RUN git clone git://github.com/xychelsea/deepfacelab.git ${DEEPFACELAB_PATH} \
     && mkdir -p ${DEEPFACELAB_WORKSPACE} \
     && rm -rvf ${ANACONDA_PATH}/share/jupyter/lab/staging
 
