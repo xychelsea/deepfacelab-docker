@@ -74,6 +74,7 @@ RUN conda create -c conda-forge -n deepfacelab \
         wheel==0.36.2 \
     && PATH=${ANACONDA_PATH}/envs/${ANACONDA_ENV}/bin/:$PATH \
     && pip install \
+        ffmpeg-python \
         tensorflow==2.4.0 \
     && git clone git://github.com/xychelsea/deepfacelab.git ${DEEPFACELAB_PATH} \
     && mkdir -p ${DEEPFACELAB_WORKSPACE} \
