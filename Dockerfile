@@ -62,11 +62,13 @@ RUN conda install -c conda-forge -n deepfacelab \
         ffmpeg==4.3.1 \
         ffmpeg-python==0.2.0 \
         idna==2.10 \
-        numpy==1.19.5 \
+        numpy==1.20.1 \
+        opencv==4.5.0 \
         pillow==8.1.0 \
         pyqt==5.12.3 \
         py-opencv==4.5.0 \
         setuptools==49.6.0 \
+        scikit-image==0.18.1 \
         scipy==1.6.0 \
         six==1.15.0 \
         tensorboard==2.4.1 \
