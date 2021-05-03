@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-FROM xychelsea/anaconda3:v0.2-gpu
+FROM xychelsea/ffmpeg-nvidia:v0.3
 LABEL description="DeepFaceLab GPU Container"
 
 # $ docker build --network=host -t xychelsea/deepfacelab:latest-gpu -f Dockerfile.nvidia .
@@ -23,7 +23,7 @@ LABEL description="DeepFaceLab GPU Container"
 
 ENV ANACONDA_ENV=deepfacelab
 ENV DEEPFACELAB_PATH=/usr/local/deepfacelab
-ENV DEEPFACELAB_PYTHON=python3.8
+ENV DEEPFACELAB_PYTHON=python3.7
 ENV DEEPFACELAB_HOME=${HOME}/deepfacelab
 ENV DEEPFACELAB_WORKSPACE=${DEEPFACELAB_PATH}/workspace
 ENV DEEPFACELAB_SCRIPTS=${DEEPFACELAB_PATH}/scripts
@@ -38,9 +38,8 @@ RUN apt-get update --fix-missing \
 
 # Install dependencies
 RUN apt-get -y install \
-    wget \
     git \
-    debhelper-compat flite1-dev frei0r-plugins-dev ladspa-sdk libaom-dev libaribb24-dev libass-dev libbluray-dev libbs2b-dev libbz2-dev libcaca-dev libcdio-paranoia-dev libchromaprint-dev libcodec2-dev libdc1394-22-dev libdrm-dev libffmpeg-nvenc-dev libfontconfig1-dev libfreetype6-dev libfribidi-dev libgl1-mesa-dev libgme-dev libgnutls28-dev libgsm1-dev libiec61883-dev libavc1394-dev libjack-jackd2-dev liblensfun-dev liblilv-dev liblzma-dev libmp3lame-dev libmysofa-dev libopenal-dev libomxil-bellagio-dev libopencore-amrnb-dev libopencore-amrwb-dev libopenjp2-7-dev libopenmpt-dev libopus-dev libpulse-dev librubberband-dev librsvg2-dev libsctp-dev libsdl2-dev libshine-dev libsnappy-dev libsoxr-dev libspeex-dev libssh-gcrypt-dev libtesseract-dev libtheora-dev libtwolame-dev libva-dev libvdpau-dev libvidstab-dev libvo-amrwbenc-dev libvorbis-dev libvpx-dev libwavpack-dev libwebp-dev libx264-dev libx265-dev libxcb-shape0-dev libxcb-shm0-dev libxcb-xfixes0-dev libxml2-dev libxv-dev libxvidcore-dev libxvmc-dev libzmq3-dev libzvbi-dev ocl-icd-opencl-dev pkg-config texinfo nasm zlib1g-dev cleancss doxygen node-less tree
+    libglu1-mesa-dev
 
 # Create DeepFaceLab directory
 RUN mkdir -p ${DEEPFACELAB_PATH} \
@@ -54,108 +53,23 @@ WORKDIR ${HOME}
 RUN conda update -c defaults conda
 
 # Install DeepFaceLab
-RUN conda create -c conda-forge -n deepfacelab python=3.8.6
+RUN conda create -c nvidia -n deepfacelab python=3.7 cudnn=8.0.4 cudatoolkit=11.0.221
 
-RUN conda install -c conda-forge -n deepfacelab \
-        ca-certificates==2020.12.5 \
-        chardet==3.0.4 \
-        colorama==0.4.4 \
-        ffmpeg-python==0.2.0 \
-        idna==2.10 \
-        numpy==1.20.1 \
-        opencv==4.5.0 \
-        pillow==8.1.0 \
-        pyqt==5.12.3 \
-        py-opencv==4.5.0 \
-        setuptools==49.6.0 \
-        scikit-image==0.18.1 \
-        scipy==1.6.0 \
-        six==1.15.0 \
-        tensorboard==2.4.1 \
-        tensorboard-plugin-wit==1.8.0 \
-        tqdm==4.56.0 \
-        werkzeug==1.0.1 \
-        wheel==0.36.2 \
-    && PATH=$PATH:${ANACONDA_PATH}/envs/${ANACONDA_ENV}/bin/
-
-RUN conda run -n deepfacelab pip3 install tensorflow-gpu==2.4.0
+RUN conda run -n deepfacelab pip3 install \
+	tqdm \
+	numpy==1.19.3 \
+	h5py==2.10.0 \
+	opencv-python==4.1.0.25 \
+	ffmpeg-python==0.1.17 \
+	scikit-image==0.14.2 \
+	scipy==1.4.1 \
+	colorama \
+	tensorflow-gpu==2.4.0 \
+	pyqt5
 
 RUN git clone git://github.com/xychelsea/deepfacelab.git ${DEEPFACELAB_PATH} \
     && mkdir -p ${DEEPFACELAB_WORKSPACE} \
     && rm -rvf ${ANACONDA_PATH}/share/jupyter/lab/staging
-
-RUN cd ~ \
-    && wget -O ~/ffmpeg_4.3.1.orig.tar.xz http://archive.ubuntu.com/ubuntu/pool/universe/f/ffmpeg/ffmpeg_4.3.1.orig.tar.xz \
-    && tar -xvf ffmpeg_4.3.1.orig.tar.xz \
-    && cd ~/ffmpeg-4.3.1 \
-    && ./configure --prefix=/usr/local/ffmpeg-nvenc \
-        --extra-cflags=-I/usr/local/cuda/include \
-        --extra-ldflags=-L/usr/local/cuda/lib64 \
-        --toolchain=hardened \
-        --enable-gpl \
-        --disable-stripping \
-        --enable-avresample --disable-filter=resample \
-        --enable-cuvid \
-        --enable-gnutls \
-        --enable-ladspa \
-        --enable-libaom \
-        --enable-libass \
-        --enable-libbluray \
-        --enable-libbs2b \
-        --enable-libcaca \
-        --enable-libcdio \
-        --enable-libcodec2 \
-        --enable-libflite \
-        --enable-libfontconfig \
-        --enable-libfreetype \
-        --enable-libfribidi \
-        --enable-libgme \
-        --enable-libgsm \
-        --enable-libjack \
-        --enable-libmp3lame \
-        --enable-libmysofa \
-        --enable-libnpp \
-        --enable-libopenjpeg \
-        --enable-libopenmpt \
-        --enable-libopus \
-        --enable-libpulse \
-        --enable-librsvg \
-        --enable-librubberband \
-        --enable-libshine \
-        --enable-libsnappy \
-        --enable-libsoxr \
-        --enable-libspeex \
-        --enable-libssh \
-        --enable-libtheora \
-        --enable-libtwolame \
-        --enable-libvorbis \
-        --enable-libvidstab \
-        --enable-libvpx \
-        --enable-libwavpack \
-        --enable-libwebp \
-        --enable-libx265 \
-        --enable-libxml2 \
-        --enable-libxvid \
-        --enable-libzmq \
-        --enable-libzvbi \
-        --enable-lv2 \
-        --enable-nvenc \
-        --enable-nonfree \
-        --enable-omx \
-        --enable-openal \
-        --enable-opencl \
-        --enable-opengl \
-        --enable-sdl2 \
-    && make -j 8
-
-USER root
-
-RUN cd /home/anaconda/ffmpeg-4.3.1 \
-   && make install
-
-USER $ANACONDA_UID
-
-RUN echo 'PATH="/usr/local/ffmpeg-nvenc/bin:$PATH"' >> $HOME/.bashrc
 
 # Switch back to root
 USER root
@@ -170,10 +84,8 @@ RUN fix-permissions ${DEEPFACELAB_WORKSPACE} \
 RUN conda clean -afy
 
 # Clean packages and caches
-RUN apt-get --purge -y autoremove \
-        git \
-        wget \
-    && rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/* ${HOME}/ffmpeg* \
+RUN apt-get --purge -y autoremove git \
+    && rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/* \
     && rm -rvf /home/${ANACONDA_PATH}/.cache/yarn \
     && fix-permissions ${HOME} \
     && fix-permissions ${ANACONDA_PATH}
