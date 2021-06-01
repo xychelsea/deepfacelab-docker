@@ -66,7 +66,8 @@ RUN conda run -n deepfacelab pip3 install \
 	colorama \
 	tensorflow-gpu==2.4.0 \
 	pyqt5
- 										RUN git clone git://github.com/xychelsea/deepfacelab.git ${DEEPFACELAB_PATH} \
+
+RUN git clone git://github.com/xychelsea/deepfacelab.git ${DEEPFACELAB_PATH} \
 	&& mkdir -p ${DEEPFACELAB_WORKSPACE} \
 	&& rm -rvf ${ANACONDA_PATH}/share/jupyter/lab/staging
 
