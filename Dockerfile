@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-FROM xychelsea/anaconda3:v0.3
+FROM xychelsea/anaconda3:v0.4.1
 LABEL description="DeepFaceLab Vanilla Container"
 
 # $ docker build --network=host -t xychelsea/deepfacelab:latest -f Dockerfile .
@@ -52,21 +52,22 @@ WORKDIR ${HOME}
 # Update Anaconda
 RUN conda update -c defaults conda
 
-# Install DeepFaceLab
-RUN conda create -c main -n deepfacelab python=3.7
+# Create environment and install dependencies
+RUN conda create -n deepfacelab -c conda-forge python=3.7 \
+    && conda run -n deepfacelab pip3 install \
+    tqdm \
+    numpy==1.19.3 \
+    h5py==2.10.0 \
+    opencv-python==4.1.0.25 \
+    ffmpeg-python==0.1.17 \
+    scikit-image==0.14.2 \
+    scipy==1.4.1 \
+    colorama \
+    tensorflow==2.4.0 \
+    pyqt5 \
+    && conda clean -afy
 
-RUN conda run -n deepfacelab pip3 install \
-	tqdm \
-	numpy==1.19.3 \
-	h5py==2.10.0 \
-	opencv-python==4.1.0.25 \
-	ffmpeg-python==0.1.17 \
-	scikit-image==0.14.2 \
-	scipy==1.4.1 \
-	colorama \
-	tensorflow==2.4.0 \
-	pyqt5
-
+# Install rife from github repo
 RUN git clone git://github.com/xychelsea/deepfacelab.git ${DEEPFACELAB_PATH} \
     && mkdir -p ${DEEPFACELAB_WORKSPACE} \
     && rm -rvf ${ANACONDA_PATH}/share/jupyter/lab/staging

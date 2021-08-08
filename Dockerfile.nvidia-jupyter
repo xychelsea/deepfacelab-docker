@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-FROM xychelsea/ffmpeg-nvidia:v0.3-jupyter
+FROM xychelsea/ffmpeg-nvidia:v0.4.1-jupyter
 LABEL description="DeepFaceLab GPU Container w/ Jupyter Notebooks"
 
 # $ docker build --network=host -t xychelsea/deepfacelab:latest-gpu-jupyter -f Dockerfile.nvidia-jupyter .
@@ -23,7 +23,7 @@ LABEL description="DeepFaceLab GPU Container w/ Jupyter Notebooks"
 
 ENV ANACONDA_ENV=deepfacelab
 ENV DEEPFACELAB_PATH=/usr/local/deepfacelab
-ENV DEEPFACELAB_PYTHON=python3.8
+ENV DEEPFACELAB_PYTHON=python3.7
 ENV DEEPFACELAB_HOME=${HOME}/deepfacelab
 ENV DEEPFACELAB_WORKSPACE=${DEEPFACELAB_PATH}/workspace
 ENV DEEPFACELAB_SCRIPTS=${DEEPFACELAB_PATH}/scripts
@@ -52,21 +52,33 @@ WORKDIR ${HOME}
 # Update Anaconda
 RUN conda update -c defaults conda
 
-# Install DeepFaceLab
-RUN conda create -c nvidia -n deepfacelab python=3.7 cudnn=8.0.4 cudatoolkit=11.0.221
+# Create environment and install dependencies
+RUN conda create -n deepfacelab -c nvidia \
+    python \
+    cudnn \
+    cudatoolkit \
+    && conda clean -afy
 
-RUN conda run -n deepfacelab pip3 install \
-	tqdm \
-	numpy==1.19.3 \
-	h5py==2.10.0 \
-	opencv-python==4.1.0.25 \
-	ffmpeg-python==0.1.17 \
-	scikit-image==0.14.2 \
-	scipy==1.4.1 \
-	colorama \
-	tensorflow-gpu==2.4.0 \
-	pyqt5
+#RUN conda run -n deepfacelab pip3 install \
+#    tqdm \
+#    numpy==1.19.3 \
+#    h5py==2.10.0 \
+#    opencv-python==4.1.0.25 \
+#    ffmpeg-python==0.1.17 \
+#    scikit-image==0.14.2 \
+#    scipy==1.4.1 \
+#    colorama \
+#    tensorflow-gpu==2.4.0 \
+#    pyqt5
 
+# Install Jupyter Notebook
+RUN conda install -n ${ANACONDA_ENV} -c conda-forge \
+    ipykernel \
+    && conda run -n ${ANACONDA_ENV} ipython kernel install --user --name=${ANACONDA_ENV} \
+    && conda clean -afy \
+    && rm -rvf ${ANACONDA_PATH}/share/jupyter/lab/staging
+
+# Install deepfacelab from github repo 
 RUN git clone git://github.com/xychelsea/deepfacelab.git ${DEEPFACELAB_PATH} \
 	&& mkdir -p ${DEEPFACELAB_WORKSPACE} \
 	&& rm -rvf ${ANACONDA_PATH}/share/jupyter/lab/staging
